@@ -1,5 +1,5 @@
 # Reddit Clone App on Kubernetes
-New Test 200
+New Devops project  Jenkins - Sonarqube - Docker - Trivy - K8s - Argocd - Prometheus - Grafana
 
 
 
