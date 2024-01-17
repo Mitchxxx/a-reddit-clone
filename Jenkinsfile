@@ -21,7 +21,32 @@ pipeline {
     }
    stage('Checkout from Git') {
       steps {
-        git branch: 'main', url ''
+        git branch: 'main', url 'https://github.com/Mitchxxx/a-reddit-clone.git'
+    }
+  }
+  stage('Sonarqube Analysis') {
+      steps {
+        withSonarQubeEnv('SonarQube-server'){
+	  sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Reddit-Clone-CI \
+             -Dsonar.projectKey=Reddit-Clone-CI '''
+	}
+    }
+  }
+  stage('Quality Gate') {
+      steps {
+        script {
+          waitForQualityGate abortPipeline: false, credentials: 'sonarqube-token'
+        }
+    }
+  }
+  stage('Install Dependencies') {
+      steps {
+        sh "npm install"
+    }
+  }
+  stage('Trivy FS Scan') {
+      steps {
+        sh "trivy fs . > trivyfs.txt"
     }
   }
 }
